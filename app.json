@@ -15,7 +15,7 @@
       "package": "com.vicky31.screetime"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      
     },
     "plugins": [
       "expo-font"
