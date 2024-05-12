@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
-        marginTop: '-15%'
+        marginTop: '-15%',
+        justifyContent:'center'
     },
     colon: {
         color: 'white',
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'sfprobold',
         fontSize: 22.5,
-        paddingLeft: 5
+        paddingLeft: 2
     },
     batterywrapper: {
         flex: 1,
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     },
     batteryicon: {
         width:'20%',
-        height:'15%',
+        height:'13%',
         marginTop: '5%',
     },
     datedaywrapper: {
