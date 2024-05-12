@@ -23,8 +23,7 @@ const Home = () => {
     }, []);
 
     useFonts({
-        'sfprobold': require('../assets/fonts/sfprodisplaybold.ttf'),
-        'sfpromedium': require('../assets/fonts/sfprodisplaymedium.ttf')
+        'sfprobold': require('../assets/fonts/sfprodisplaybold.ttf')
     });
 
     useEffect(() => {
