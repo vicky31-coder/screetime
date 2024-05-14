@@ -3,7 +3,9 @@ import { Text, StyleSheet, SafeAreaView, View, StatusBar, Image } from "react-na
 import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
-import { responsiveScreenFontSize } from "react-native-responsive-dimensions";
+import { responsiveFontSize, responsiveScreenFontSize } from "react-native-responsive-dimensions";
+import { openWeatherApiKey } from "../apiKeys";
+import axios from "axios";
 
 const Home = () => {
 
@@ -14,6 +16,9 @@ const Home = () => {
     const [currentDay, setCurrentDay] = useState("");
     const [batteryLevel, setBatteryLevel] = useState(null);
     const [batteryState, setBatteryState] = useState(null);
+    const [weatherData, setweatherData] = useState(null);
+    const code = openWeatherApiKey;
+    const city = 'chennai'
 
     useEffect(() => {
       async function loadBatteryInfo() {
@@ -54,6 +59,17 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
+        axios
+          .get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`)
+          .then(response => {
+            setweatherData(response.data);
+          })
+          .catch(error => {
+            console.error('Error fetching weather data:', error);
+          });
+      }, [code, city]);
+
+    useEffect(() => {
         const date = new Date();
         const dayOptions = { weekday: 'long' };
         const monthOptions = { month: 'long' };
@@ -63,12 +79,15 @@ const Home = () => {
         setCurrentDate(formattedDate);
       }, []);
 
-
-
     return(
         <SafeAreaView>
             <View style = {styles.maincon}>
                 <StatusBar hidden={true} />
+                {weatherData && ( 
+                    <View style={styles.weathercontainer}>
+                        <Text style={styles.temperature}>{weatherData.main.temp} °C</Text>
+                    </View>
+                )}
                 <View style = {styles.batterywrapper}>
                     {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
                     <Image style = {styles.batteryicon} source={require('../assets/Images/l-icon.png')} />
@@ -117,7 +136,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
-        marginTop: '2%',
+        marginTop: '4%',
         justifyContent:'center'
     },
     colon: {
@@ -137,7 +156,7 @@ const styles = StyleSheet.create({
         Height:'10%',
         Width: '10%',
         marginLeft: '88%',
-        marginTop: '2.5%'
+        marginTop: '-4.5%'
     },
     chargecondition: {
         color: 'white',
@@ -153,7 +172,7 @@ const styles = StyleSheet.create({
     datedaywrapper: {
         flex:1,
         flexDirection: 'column',
-        marginTop: '-2.5%'
+        marginTop: '1%'
     },
     date: {
         color: 'white',
@@ -166,5 +185,15 @@ const styles = StyleSheet.create({
         fontFamily: 'sfprobold',
         textAlign: 'center',
         fontSize: responsiveScreenFontSize(3)
-    }
+    },
+    weathercontainer: {
+        marginTop: '2.5%',
+        marginLeft: '3%'
+    },
+    temperature: {
+        color:'white',
+        fontFamily: 'sfprobold',
+        fontSize: responsiveScreenFontSize(3)
+    },
+    
 })
