@@ -3,14 +3,17 @@ import { Text, StyleSheet, SafeAreaView, View, StatusBar, Image } from "react-na
 import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
+import { responsiveScreenFontSize } from "react-native-responsive-dimensions";
 
 const Home = () => {
+
     const [ currentHours, setCurrentHours ] = useState("");
     const [ currentMinutes, setCurrentMinutes ] = useState("");
     const [ currentSeconds, setCurrentSeconds ] = useState("");
     const [currentDate, setCurrentDate] = useState("");
     const [currentDay, setCurrentDay] = useState("");
     const [batteryLevel, setBatteryLevel] = useState(null);
+    const [batteryState, setBatteryState] = useState(null);
 
     useEffect(() => {
       async function loadBatteryInfo() {
@@ -21,6 +24,16 @@ const Home = () => {
       const intervalId = setInterval(loadBatteryInfo, 30000);
       return () => clearInterval(intervalId);
     }, []);
+
+    useEffect(() => {
+        async function loadBatteryState() {
+          const batteryStateInfo = await Battery.getPowerStateAsync();
+          setBatteryState(batteryStateInfo.batteryState);
+        }
+        loadBatteryState();
+        const intervalId1 = setInterval(loadBatteryState, 1000);
+        return () => clearInterval(intervalId1);
+      }, []);
 
     useFonts({
         'sfprobold': require('../assets/fonts/sfprodisplaybold.ttf')
@@ -50,11 +63,14 @@ const Home = () => {
         setCurrentDate(formattedDate);
       }, []);
 
+
+
     return(
         <SafeAreaView>
             <View style = {styles.maincon}>
                 <StatusBar hidden={true} />
                 <View style = {styles.batterywrapper}>
+                    {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
                     <Image style = {styles.batteryicon} source={require('../assets/Images/l-icon.png')} />
                     <Text style = {styles.batteryindicator}>{batteryLevel}</Text>
                 </View>
@@ -85,47 +101,54 @@ const styles = StyleSheet.create({
     hourstext: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: 130
+        fontSize: responsiveScreenFontSize(15)
     },
     minutestext: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: 125
+        fontSize: responsiveScreenFontSize(15)
     },
     secondstext: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: 125
+        fontSize: responsiveScreenFontSize(15)
     },
     flexwrappper: {
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
-        marginTop: '-15%',
+        marginTop: '2%',
         justifyContent:'center'
     },
     colon: {
         color: 'white',
-        fontSize: 125
+        fontSize: responsiveScreenFontSize(15),
+        marginTop: '-3%',
+        marginHorizontal:'1%'
     },
     batteryindicator: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: 22.5,
+        fontSize: responsiveScreenFontSize(3),
         paddingLeft: 2
     },
     batterywrapper: {
-        flex: 1,
         flexDirection: 'row',
         Height:'10%',
         Width: '10%',
         marginLeft: '88%',
         marginTop: '2.5%'
     },
+    chargecondition: {
+        color: 'white',
+        fontFamily: 'sfprobold',
+        fontSize: responsiveScreenFontSize(3),
+        marginLeft: '-110%',
+    },
     batteryicon: {
         width:'20%',
-        height:'13%',
-        marginTop: '5%',
+        height:'70%',
+        marginTop: '5.5%',
     },
     datedaywrapper: {
         flex:1,
@@ -136,12 +159,12 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'sfprobold',
         textAlign: 'center',
-        fontSize: 25
+        fontSize: responsiveScreenFontSize(3)
     },
     day: {
         color: 'white',
         fontFamily: 'sfprobold',
         textAlign: 'center',
-        fontSize: 25
+        fontSize: responsiveScreenFontSize(3)
     }
 })
