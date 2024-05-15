@@ -3,7 +3,7 @@ import { Text, StyleSheet, SafeAreaView, View, StatusBar, Image } from "react-na
 import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
-import { responsiveFontSize, responsiveScreenFontSize } from "react-native-responsive-dimensions";
+import {  responsiveScreenFontSize } from "react-native-responsive-dimensions";
 import { openWeatherApiKey } from "../apiKeys";
 import axios from "axios";
 
@@ -142,7 +142,8 @@ const styles = StyleSheet.create({
     colon: {
         color: 'white',
         fontSize: responsiveScreenFontSize(15),
-        marginTop: '-3%',
+        fontFamily: 'sfprobold',
+        marginTop: '-2%',
         marginHorizontal:'1%'
     },
     batteryindicator: {
