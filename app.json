@@ -14,16 +14,15 @@
       },
       "package": "com.vicky31.screetime"
     },
-    "web": {
-      
-    },
+    "web": {},
     "plugins": [
       "expo-font"
     ],
     "extra": {
       "eas": {
-        "projectId": "13f40572-2388-4600-affd-831884b2e8fa"
+        "projectId": "60174a16-d064-4782-9578-631ef51666a3"
       }
-    }
+    },
+    "owner": "vicky31"
   }
 }
