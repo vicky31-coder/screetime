@@ -1,11 +1,8 @@
-import React from "react";
 import { Text, StyleSheet, SafeAreaView, View, StatusBar, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
 import {  responsiveScreenFontSize } from "react-native-responsive-dimensions";
-import { openWeatherApiKey } from "../apiKeys";
-import axios from "axios";
 
 const Home = () => {
 
@@ -16,9 +13,6 @@ const Home = () => {
     const [currentDay, setCurrentDay] = useState("");
     const [batteryLevel, setBatteryLevel] = useState(null);
     const [batteryState, setBatteryState] = useState(null);
-    const [weatherData, setweatherData] = useState(null);
-    const code = openWeatherApiKey;
-    const city = 'chennai'
 
     useEffect(() => {
       async function loadBatteryInfo() {
@@ -59,17 +53,6 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-        axios
-          .get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`)
-          .then(response => {
-            setweatherData(response.data);
-          })
-          .catch(error => {
-            console.error('Error fetching weather data:', error);
-          });
-      }, [code, city]);
-
-    useEffect(() => {
         const date = new Date();
         const dayOptions = { weekday: 'long' };
         const monthOptions = { month: 'long' };
@@ -83,11 +66,6 @@ const Home = () => {
         <SafeAreaView>
             <View style = {styles.maincon}>
                 <StatusBar hidden={true} />
-                {weatherData && ( 
-                    <View style={styles.weathercontainer}>
-                        <Text style={styles.temperature}>{weatherData.main.temp} °C</Text>
-                    </View>
-                )}
                 <View style = {styles.batterywrapper}>
                     {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
                     <Image style = {styles.batteryicon} source={require('../assets/Images/l-icon.png')} />
@@ -120,28 +98,28 @@ const styles = StyleSheet.create({
     hourstext: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(15)
+        fontSize: responsiveScreenFontSize(16)
     },
     minutestext: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(15)
+        fontSize: responsiveScreenFontSize(16)
     },
     secondstext: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(15)
+        fontSize: responsiveScreenFontSize(16)
     },
     flexwrappper: {
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
-        marginTop: '4%',
+        marginTop: '3%',
         justifyContent:'center'
     },
     colon: {
         color: 'white',
-        fontSize: responsiveScreenFontSize(15),
+        fontSize: responsiveScreenFontSize(16),
         fontFamily: 'sfprobold',
         marginTop: '-2%',
         marginHorizontal:'1%'
@@ -157,7 +135,12 @@ const styles = StyleSheet.create({
         Height:'10%',
         Width: '10%',
         marginLeft: '88%',
-        marginTop: '-4.5%'
+        marginTop: '2%'
+    },
+    batteryicon: {
+        width:'20%',
+        height:'70%',
+        marginTop: '5.5%',
     },
     chargecondition: {
         color: 'white',
@@ -165,11 +148,7 @@ const styles = StyleSheet.create({
         fontSize: responsiveScreenFontSize(3),
         marginLeft: '-110%',
     },
-    batteryicon: {
-        width:'20%',
-        height:'70%',
-        marginTop: '5.5%',
-    },
+
     datedaywrapper: {
         flex:1,
         flexDirection: 'column',
@@ -179,22 +158,12 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'sfprobold',
         textAlign: 'center',
-        fontSize: responsiveScreenFontSize(3)
+        fontSize: responsiveScreenFontSize(3.8)
     },
     day: {
         color: 'white',
         fontFamily: 'sfprobold',
         textAlign: 'center',
-        fontSize: responsiveScreenFontSize(3)
-    },
-    weathercontainer: {
-        marginTop: '2.5%',
-        marginLeft: '3%'
-    },
-    temperature: {
-        color:'white',
-        fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(3)
-    },
-    
+        fontSize: responsiveScreenFontSize(3.8)
+    }
 })
