@@ -2,7 +2,7 @@ import { Text, StyleSheet, SafeAreaView, View, StatusBar, Image } from "react-na
 import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
-import {  responsiveScreenFontSize } from "react-native-responsive-dimensions";
+import { responsiveScreenFontSize } from "react-native-responsive-dimensions";
 
 const Home = () => {
 
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: responsiveScreenFontSize(16),
         fontFamily: 'sfprobold',
-        marginTop: '-2%',
+        marginTop: '-1.5%',
         marginHorizontal:'1%'
     },
     batteryindicator: {
@@ -134,13 +134,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         Height:'10%',
         Width: '10%',
-        marginLeft: '88%',
-        marginTop: '2%'
+        marginTop: '2%',
+        marginLeft: 'auto',
+        marginRight: '4%'
     },
     batteryicon: {
-        width:'20%',
-        height:'70%',
-        marginTop: '5.5%',
+        width: '3%',
+        height: '70%',
+        marginTop: '0.8%'
     },
     chargecondition: {
         color: 'white',
@@ -148,7 +149,6 @@ const styles = StyleSheet.create({
         fontSize: responsiveScreenFontSize(3),
         marginLeft: '-110%',
     },
-
     datedaywrapper: {
         flex:1,
         flexDirection: 'column',
