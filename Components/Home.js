@@ -146,8 +146,7 @@ const styles = StyleSheet.create({
     chargecondition: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(3),
-        marginLeft: '-110%',
+        fontSize: responsiveScreenFontSize(3)
     },
     datedaywrapper: {
         flex:1,
