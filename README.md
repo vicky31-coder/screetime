@@ -4,7 +4,7 @@ Screetime
 Screetime is a app for ultilizing any old mobile phone or your regular phone screen by making it a minimalistic clock displaying date, 
 day and time with battery percentage since it is first release of the app the app focusses on basic workablity of the app rather than 
 the aestectic parts of the app. The app have no touchables (AKA - Button or touchables items) since the app is built specially for 
-phones that suffer from ghost touch but Svreetime is used as a small desktop clock which adds a nice touch to the desktop.
+phones that suffer from ghost touch but Screetime is used as a small desktop clock which adds a nice touch to the desktop.
 ----------
 Usecase: Minimalistic Desktop clock
 ----------
@@ -16,12 +16,13 @@ The App is devoloped in react-native (Expo-cli)
 * Expo-cli for devolopment and debugging
 * EAS (expo application services) for building releases
 * Android studio for native android error rectification
-* Git for version control
+* Git for version control preferably git bash
 ----------
 Setting up the devolopment Environment
 ----------
 * Installation of Node.js -preferably (v20)
 * Choosing package manager like yarn or NPM (I used NPM)
+* cloning the project by git clone
 * Installing Expo-cli - `npm i expo-cli` (will install the local-cli)
   If you install global-cli it will throw an warning since the local-cli 
   superseeded the global-cli 
