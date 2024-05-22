@@ -3,16 +3,31 @@ import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
 import { responsiveScreenFontSize } from "react-native-responsive-dimensions";
+import { openWeatherApiKey } from "../apiKeys.js"
+import axios from "axios";
 
 const Home = () => {
 
     const [ currentHours, setCurrentHours ] = useState("");
     const [ currentMinutes, setCurrentMinutes ] = useState("");
     const [ currentSeconds, setCurrentSeconds ] = useState("");
-    const [currentDate, setCurrentDate] = useState("");
-    const [currentDay, setCurrentDay] = useState("");
-    const [batteryLevel, setBatteryLevel] = useState(null);
-    const [batteryState, setBatteryState] = useState(null);
+    const [ currentDate, setCurrentDate ] = useState("");
+    const [ currentDay, setCurrentDay ] = useState("");
+    const [ batteryLevel, setBatteryLevel ] = useState(null);
+    const [ batteryState, setBatteryState ] = useState(null);
+    const [ weatherData, setweatherData ] = useState(null);
+    const city = 'chennai'
+
+    useEffect(() => {
+      axios
+        .get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`)
+        .then(response => {
+          setweatherData(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching weather data:', error);
+        });
+    }, [openWeatherApiKey, city]);
 
     useEffect(() => {
       async function loadBatteryInfo() {
@@ -66,6 +81,11 @@ const Home = () => {
         <SafeAreaView>
             <View style = {styles.maincon}>
                 <StatusBar hidden={true} />
+                {weatherData && ( 
+                    <View style={styles.temperaturecon}>
+                        <Text style={styles.temperaturetext}>{weatherData.main.temp} °C</Text>
+                    </View>
+                )}
                 <View style = {styles.batterywrapper}>
                     {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
                     <Image style = {styles.batteryicon} source={require('../assets/Images/l-icon.png')} />
@@ -114,7 +134,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
-        marginTop: '3%',
+        marginTop: '4%',
         justifyContent:'center'
     },
     colon: {
@@ -127,26 +147,26 @@ const styles = StyleSheet.create({
     batteryindicator: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(3),
-        paddingLeft: 2
+        fontSize: responsiveScreenFontSize(2.5),
+        paddingLeft: 1
     },
     batterywrapper: {
         flexDirection: 'row',
         Height:'10%',
         Width: '10%',
-        marginTop: '2%',
+        marginTop: '-4%',
         marginLeft: 'auto',
         marginRight: '4%'
     },
     batteryicon: {
         width: '3%',
-        height: '70%',
-        marginTop: '0.8%'
+        height: '55%',
+        marginTop: '0.9%'
     },
     chargecondition: {
         color: 'white',
         fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(3)
+        fontSize: responsiveScreenFontSize(2.5)
     },
     datedaywrapper: {
         flex:1,
@@ -164,5 +184,14 @@ const styles = StyleSheet.create({
         fontFamily: 'sfprobold',
         textAlign: 'center',
         fontSize: responsiveScreenFontSize(3.8)
+    },
+    temperaturecon: {
+        marginTop: '2%',
+        marginLeft: '2%'
+    },
+    temperaturetext: {
+        color: 'white',
+        fontFamily: 'sfprobold',
+        fontSize: responsiveScreenFontSize(2.5)
     }
 })
