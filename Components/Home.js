@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
 import { responsiveScreenFontSize } from "react-native-responsive-dimensions";
-import { openWeatherApiKey, city } from "../apiKeys.js"
-import ky from "ky";
+import NetInfo from "@react-native-community/netinfo";
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 
 const Home = () => {
 
@@ -15,24 +15,39 @@ const Home = () => {
     const [ currentDay, setCurrentDay ] = useState("");
     const [ batteryLevel, setBatteryLevel ] = useState(null);
     const [ batteryState, setBatteryState ] = useState(null);
-    const [weatherData, setWeatherData] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isWifiConnected, setIsWifiConnected] = useState(false)
+    const motivtext = [
+        ' " Grind, Grind, Grind " ',
+        ' " Dont give up on fighting for love " ',
+        ' " Get it done " ',
+        ' " want a future pav the way " ',
+        ' " Go chase it buddy " ',
+        ' " Dont have time make some " ',
+        ' " There will not be always a second chance " ',
+        ' " Smile a bit " ',
+        ' " Oppurtunities doesnt lie on the floor so make some " ',
+        ' " Consistency is the key " ',
+        ' " Show progression not perfection " ',
+        ' " If you help someone it will come by " ',
+        ' " Show them what they didnt expect to see! " ',
+        ' " Some mark sheets doesnt define ur life " ',
+    ]
 
     useEffect(() => {
-        const fetchWeatherData = async () => {
-          try {
-            const response = await ky.get(
-              `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`
-            );
-            const json = await response.json();
-            setWeatherData(json);
-            console.log(json)
-          } catch (error) {
-            console.error("Error fetching weather data:", error);
-          }
+        const unsubscribe = NetInfo.addEventListener(state => {
+          setIsWifiConnected(state.type === 'wifi' && state.isConnected);
+        });
+        return () => unsubscribe();
+      }, []);
+
+    useEffect(() => {
+        const updateMessage = () => {
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % motivtext.length);
         };
-    
-        fetchWeatherData();
-    }, []);
+        const intervalId = setInterval(updateMessage, 2*30*60000); // 1 hour cyclic text interval
+        return () => clearInterval(intervalId);
+      }, []);
 
     useEffect(() => {
       async function loadBatteryInfo() {
@@ -55,7 +70,8 @@ const Home = () => {
       }, []);
 
     useFonts({
-        'sfprobold': require('../assets/fonts/sfprodisplaybold.ttf')
+        'sfprobold': require('../assets/fonts/sfprodisplaybold.ttf'),
+        'sfprobolditalic': require('../assets/fonts/sfprodisplaybolditalic.ttf')
     });
 
     useEffect(() => {
@@ -86,15 +102,18 @@ const Home = () => {
         <SafeAreaView>
             <View style = {styles.maincon}>
                 <StatusBar hidden={true} />
-                {weatherData && ( 
-                    <View style={styles.temperaturecon}>
-                        <Text style={styles.temperaturetext}>{weatherData.main.temp} °C</Text>
+                <View style = {styles.header}>
+                    <View>
+                        {isWifiConnected && <Icon name="wifi" style = {styles.wifi} />}
                     </View>
-                )}
-                <View style = {styles.batterywrapper}>
-                    {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
-                    <Image style = {styles.batteryicon} source={require('../assets/Images/l-icon.png')} />
-                    <Text style = {styles.batteryindicator}>{batteryLevel}</Text>
+                    <View style = {styles.batterywrapper}>
+                        {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
+                        <Icon name="lightning-bolt" style = {styles.batteryicon} />
+                        <Text style = {styles.batteryindicator}>{batteryLevel}</Text>
+                    </View>
+                </View>
+                <View style = {styles.motivationtextcon}>
+                    <Text style = {styles.motivationtext}>{motivtext[currentIndex]}</Text>
                 </View>
                 <View style = {styles.flexwrappper}>
                     <Text style = {styles.hourstext}>{currentHours}</Text>
@@ -120,6 +139,11 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: 'black'
     },
+    header: {
+        flex:1 ,
+        flexDirection:'row',
+        marginTop: '2%'
+    },
     hourstext: {
         color: 'white',
         fontFamily: 'sfprobold',
@@ -139,7 +163,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
-        marginTop: '4%',
+        marginTop: '-16%',
         justifyContent:'center'
     },
     colon: {
@@ -156,17 +180,15 @@ const styles = StyleSheet.create({
         paddingLeft: 1
     },
     batterywrapper: {
+        flex:1,
         flexDirection: 'row',
-        Height:'10%',
-        Width: '10%',
-        marginTop: '-4%',
-        marginLeft: 'auto',
+        justifyContent: 'flex-end',
         marginRight: '4%'
     },
     batteryicon: {
-        width: '3%',
-        height: '55%',
-        marginTop: '0.9%'
+        color: 'white',
+        fontSize: responsiveScreenFontSize(2.5),
+        marginTop: '0.6%'
     },
     chargecondition: {
         color: 'white',
@@ -190,13 +212,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: responsiveScreenFontSize(3.8)
     },
-    temperaturecon: {
-        marginTop: '2%',
-        marginLeft: '2%'
-    },
-    temperaturetext: {
+    motivationtext: {
         color: 'white',
-        fontFamily: 'sfprobold',
-        fontSize: responsiveScreenFontSize(2.5)
+        fontFamily: 'sfprobolditalic',
+        fontSize: responsiveScreenFontSize(3)
+    },
+    motivationtextcon: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: '-10%'
+    },
+    wifi: {
+        color:'white',
+        fontSize: responsiveScreenFontSize(2.5),
+        paddingLeft: '2%'
     }
 })
