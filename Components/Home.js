@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useFonts } from 'expo-font';
 import * as Battery from 'expo-battery';
 import { responsiveScreenFontSize } from "react-native-responsive-dimensions";
-import { openWeatherApiKey } from "../apiKeys.js"
-import axios from "axios";
+import { openWeatherApiKey, city } from "../apiKeys.js"
+import ky from "ky";
 
 const Home = () => {
 
@@ -15,19 +15,24 @@ const Home = () => {
     const [ currentDay, setCurrentDay ] = useState("");
     const [ batteryLevel, setBatteryLevel ] = useState(null);
     const [ batteryState, setBatteryState ] = useState(null);
-    const [ weatherData, setweatherData ] = useState(null);
-    const city = 'chennai'
+    const [weatherData, setWeatherData] = useState(null);
 
     useEffect(() => {
-      axios
-        .get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`)
-        .then(response => {
-          setweatherData(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching weather data:', error);
-        });
-    }, [openWeatherApiKey, city]);
+        const fetchWeatherData = async () => {
+          try {
+            const response = await ky.get(
+              `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`
+            );
+            const json = await response.json();
+            setWeatherData(json);
+            console.log(json)
+          } catch (error) {
+            console.error("Error fetching weather data:", error);
+          }
+        };
+    
+        fetchWeatherData();
+    }, []);
 
     useEffect(() => {
       async function loadBatteryInfo() {
