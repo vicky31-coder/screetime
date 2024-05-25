@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import ky from "ky";
+import { openWeatherApiKey, city } from "../apiKeys.js"
 
 const WeatherComponent = () => {
   const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      const city = "chennai";
-      const apiKey = "7320fa03aa039638f10340d81f72b990";
       try {
         const response = await ky.get(
-          `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+          `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherApiKey}&units=metric`
         );
         const json = await response.json();
         setWeatherData(json);
