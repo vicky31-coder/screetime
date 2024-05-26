@@ -45,7 +45,7 @@ const Home = () => {
         const updateMessage = () => {
           setCurrentIndex((prevIndex) => (prevIndex + 1) % motivtext.length);
         };
-        const intervalId = setInterval(updateMessage, 2*30*60000); // 1 hour cyclic text interval
+        const intervalId = setInterval(updateMessage, 2*30*15000); // 1 hour cyclic text interval
         return () => clearInterval(intervalId);
       }, []);
 
