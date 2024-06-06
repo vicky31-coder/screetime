@@ -16,9 +16,10 @@ const Home = () => {
     const [ batteryState, setBatteryState ] = useState(null);
     const [ currentIndex, setCurrentIndex ] = useState(0);
     const [ meridian, setMeridian ] = useState('');
-    const [isWifiConnected, setIsWifiConnected] = useState(false)
+    const [ isWifiConnected, setIsWifiConnected ] = useState(false)
+    const [ wifiCondition, setWifiCondition] = useState(false)
     const motivtext = [
-        ' " Grind, Grind, Grind " ',
+        ' " In a world full of struggles have hope " ',
         ' " Dont give up on fighting for love " ',
         ' " Get it done " ',
         ' " want a future pav the way " ',
@@ -35,11 +36,18 @@ const Home = () => {
     ]
 
     useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener(state => {
+        const WifiConnectedCondition = NetInfo.addEventListener(state => {
           setIsWifiConnected(state.type === 'wifi' && state.isConnected);
         });
-        return () => unsubscribe();
+        return () => WifiConnectedCondition();
       }, []);
+
+    useEffect(() => {
+        const wifiCondition = NetInfo.addEventListener(state => {
+            setWifiCondition(state.type === 'wifi');
+        });
+        return () => wifiCondition();
+    }, []);
 
     useEffect(() => {
         const updateMessage = () => {
@@ -108,7 +116,10 @@ const Home = () => {
                 <StatusBar hidden={true} />
                 <View style = {styles.header}>
                     <View>
-                        {isWifiConnected && <Icon name="wifi" style = {styles.wifi} />}
+                    {!isWifiConnected && <Icon name="wifi-check" style={styles.wificonnected} />}
+                    {!isWifiConnected && !wifiCondition && <Icon name="wifi-remove" style={styles.wifinotconnected} />}
+                    {wifiCondition && <Icon name="wifi" style={styles.wifion} />}
+                    {!wifiCondition && <Icon name="wifi-off" style={styles.wifioff} />}
                     </View>
                     <View style = {styles.batterywrapper}>
                         {batteryState === 1 ? null : batteryState === 2 && <Text style={styles.chargecondition}>Charging -</Text>}
@@ -237,7 +248,22 @@ const styles = StyleSheet.create({
         marginTop: '-10%',
         marginRight: '2%'
     },
-    wifi: {
+    wifion: {
+        color:'white',
+        fontSize: responsiveScreenFontSize(2.5),
+        paddingLeft: '2%'
+    },
+    wifioff: {
+        color:'white',
+        fontSize: responsiveScreenFontSize(2.5),
+        paddingLeft: '2%'
+    },
+    wificonnected: {
+        color:'white',
+        fontSize: responsiveScreenFontSize(2.5),
+        paddingLeft: '2%'
+    },
+    wifinotconnected: {
         color:'white',
         fontSize: responsiveScreenFontSize(2.5),
         paddingLeft: '2%'
