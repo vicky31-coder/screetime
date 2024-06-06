@@ -6,7 +6,8 @@
     "orientation": "landscape",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vicky31.screetime"
     },
     "android": {
       "adaptiveIcon": {
