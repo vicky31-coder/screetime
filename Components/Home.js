@@ -7,7 +7,6 @@ import NetInfo from "@react-native-community/netinfo";
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 
 const Home = () => {
-
     const [ currentHours, setCurrentHours ] = useState("");
     const [ currentMinutes, setCurrentMinutes ] = useState("");
     const [ currentSeconds, setCurrentSeconds ] = useState("");
@@ -15,7 +14,8 @@ const Home = () => {
     const [ currentDay, setCurrentDay ] = useState("");
     const [ batteryLevel, setBatteryLevel ] = useState(null);
     const [ batteryState, setBatteryState ] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [ currentIndex, setCurrentIndex ] = useState(0);
+    const [ meridian, setMeridian ] = useState('');
     const [isWifiConnected, setIsWifiConnected] = useState(false)
     const motivtext = [
         ' " Grind, Grind, Grind " ',
@@ -77,12 +77,16 @@ const Home = () => {
     useEffect(() => {
         const interval = setInterval(() => {
         const date = new Date();
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2,'0');
-        const seconds = String(date.getSeconds()).padStart(2,'0');
-        setCurrentHours(hours);
-        setCurrentMinutes(minutes);
-        setCurrentSeconds(seconds);
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        setCurrentHours(String(hours).padStart(2,'0'));
+        setCurrentMinutes(String(minutes).padStart(2,'0'));
+        setCurrentSeconds(String(seconds).padStart(2,'0'));
+        setMeridian(ampm);
     }, 1000);
 
     return() => clearInterval(interval);
@@ -121,6 +125,7 @@ const Home = () => {
                     <Text style = {styles.minutestext}>{currentMinutes}</Text>
                     <Text style = {styles.colon}>:</Text>
                     <Text style = {styles.secondstext}>{currentSeconds}</Text>
+                    <Text style = {styles.meridian}>{meridian}</Text>
                 </View>
                 <View style = {styles.datedaywrapper}> 
                     <Text style = {styles.date}>{currentDate}</Text>
@@ -159,12 +164,20 @@ const styles = StyleSheet.create({
         fontFamily: 'sfprobold',
         fontSize: responsiveScreenFontSize(16)
     },
+    meridian: {
+        color: 'white',
+        fontFamily: 'sfprobold',
+        fontSize: responsiveScreenFontSize(3),
+        marginTop: '18%',
+        marginLeft: '2%'
+    },
     flexwrappper: {
         flex: 1,
         flexDirection: 'row',
         marginHorizontal:'16%',
         marginTop: '-16%',
-        justifyContent:'center'
+        justifyContent:'center',
+        marginRight: '10%'
     },
     colon: {
         color: 'white',
@@ -215,13 +228,14 @@ const styles = StyleSheet.create({
     motivationtext: {
         color: 'white',
         fontFamily: 'sfprobolditalic',
-        fontSize: responsiveScreenFontSize(3)
+        fontSize: responsiveScreenFontSize(3),
     },
     motivationtextcon: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: '-10%'
+        marginTop: '-10%',
+        marginRight: '2%'
     },
     wifi: {
         color:'white',
