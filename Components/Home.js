@@ -118,6 +118,7 @@ const Home = () => {
                     <View>
                     { isWifiConnected && wifiCondition && <Icon name="wifi-check" style={styles.wificonnected} />}
                     {!isWifiConnected && wifiCondition && <Icon name="wifi-remove" style={styles.wifinotconnected} />}
+                    { wifiCondition && <Icon name="wifi" style={styles.wifion} />}
                     {!wifiCondition && <Icon name="wifi-off" style={styles.wifioff} />}
                     </View>
                     <View style = {styles.batterywrapper}>
@@ -246,6 +247,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: '-10%',
         marginRight: '2%'
+    },
+    wifion: {
+        color:'white',
+        fontSize: responsiveScreenFontSize(2.5),
+        paddingLeft: '2%'
     },
     wifioff: {
         color:'white',
