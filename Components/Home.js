@@ -19,7 +19,7 @@ const Home = () => {
     const [ isWifiConnected, setIsWifiConnected ] = useState(false)
     const [ wifiCondition, setWifiCondition] = useState(false)
     const motivtext = [
-        ' " In a world full of struggles have hope " ',
+        ' " In a world full of struggles have hope" ',
         ' " Dont give up on fighting for love " ',
         ' " Get it done " ',
         ' " want a future pav the way " ',
@@ -77,10 +77,10 @@ const Home = () => {
         return () => clearInterval(intervalId1);
       }, []);
 
-    useFonts({
+    useFonts ({
         'sfprobold': require('../assets/fonts/sfprodisplaybold.ttf'),
         'sfprobolditalic': require('../assets/fonts/sfprodisplaybolditalic.ttf')
-    });
+    })
 
     useEffect(() => {
         const interval = setInterval(() => {

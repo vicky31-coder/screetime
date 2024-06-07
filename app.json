@@ -17,7 +17,15 @@
     },
     "web": {},
     "plugins": [
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/sfprodisplaybold.ttf",
+            "./assets/fonts/sfprodisplaybolditalic.ttf"
+        ]
+        }
+      ],
       [
         "expo-build-properties",
         {
